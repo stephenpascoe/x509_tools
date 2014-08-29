@@ -151,7 +151,10 @@ def _pp_branches(node, prefix, tail=False):
     sys.stdout.write(prefix)
 
     now = datetime.datetime.now()
-    if ((node.not_before and now < node.not_before) or 
+    # Nodes without dates are not in the directory.
+    if (node.not_before is None):
+        flag = 'FAIL'
+    elif ((node.not_before and now < node.not_before) or 
         (node.not_after and now > node.not_after)):
         flag = 'FAIL'
     else:
