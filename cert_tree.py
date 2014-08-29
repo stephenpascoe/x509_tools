@@ -51,8 +51,16 @@ def iter_certs(cert_directory):
     yielding certificate objects.
     
     """
+    done = {}
     for certfile in glob.glob(cert_directory+'/*.0'):
         cert = C.load_certificate(C.FILETYPE_PEM, open(certfile).read())
+        subject = cert.get_subject()
+
+        if subject.hash() in done:
+            log.warn('Duplicate hash %s at %s' % (make_hexhash(subject), certfile))
+        else:
+            done[subject.hash()] = cert
+
         yield cert
 
 def make_cert_str(dn):
@@ -92,6 +100,7 @@ def build_tree(certs):
     for cert in certs:
         subject = cert.get_subject()
         issuer = cert.get_issuer()
+
 
         def asn1_dt(asn1_time):
             if asn1_time:
@@ -183,4 +192,6 @@ def make_hexhash(cert):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.WARNING)
+
     main()
