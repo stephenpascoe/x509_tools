@@ -107,11 +107,12 @@ def build_tree(certs):
         else:
             issuer_e = tree.setdefault(issuer.hash(), TreeNode(issuer))
             subject_e = tree.setdefault(subject.hash(), TreeNode(issuer))
-        
-            subject_e.not_before = not_before
-            subject_e.not_after = not_after
+
             issuer_e.children.add(subject_e)
 
+        subject_e.not_before = not_before
+        subject_e.not_after = not_after
+        
     # Trim all branches from the base
     for node1 in tree.values():
         for node2 in node1.children:
