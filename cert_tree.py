@@ -19,6 +19,8 @@ Please install with "pip install PyOpenSSL" or equivilent.'''
     sys.exit(1)
 
 
+import logging
+log = logging.getLogger('cert_tree')
 
 def main():
     import optparse
@@ -106,7 +108,7 @@ def build_tree(certs):
             subject_e = tree.setdefault(subject.hash(), TreeNode(subject))
         else:
             issuer_e = tree.setdefault(issuer.hash(), TreeNode(issuer))
-            subject_e = tree.setdefault(subject.hash(), TreeNode(issuer))
+            subject_e = tree.setdefault(subject.hash(), TreeNode(subject))
 
             issuer_e.children.add(subject_e)
 
